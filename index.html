@@ -12,7 +12,7 @@
     <meta property="og:title" content="Software Engineer Portfolio">
     <meta property="og:description" content="嵌入式软件工程师/系统架构师个人作品集">
     <meta property="og:type" content="website">
-    <title>Software Engineer Portfolio - 嵌入式软件工程师</title>
+    <title>Cyrus</title>
     <!-- Google Fonts: Plus Jakarta Sans (display) + Instrument Sans (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -217,6 +217,59 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========================================
+           鼠标视差背景 - brittanychiang风格
+           点状网格(静态) + 鼠标跟随聚光灯(动态)
+           ======================================== */
+        :root {
+            --mouse-x: 50vw;
+            --mouse-y: 50vh;
+        }
+
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            /* 层1: 点状网格(静态,低透明度) */
+            background-image:
+                radial-gradient(circle, rgba(201, 148, 26, 0.04) 1px, transparent 1px);
+            background-size: 24px 24px;  /* 点间距24px */
+        }
+
+        /* 鼠标跟随聚光灯光晕(动态) */
+        .parallax-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            background: radial-gradient(
+                circle 350px at var(--mouse-x) var(--mouse-y),
+                rgba(201, 148, 26, 0.1) 0%,
+                transparent 70%
+            );
+            will-change: background;
+        }
+
+        /* 亮色主题: 降低网格和光晕透明度 */
+        :root.light-theme .parallax-bg {
+            background-image:
+                radial-gradient(circle, rgba(201, 148, 26, 0.03) 1px, transparent 1px);
+        }
+        :root.light-theme .parallax-glow {
+            background: radial-gradient(
+                circle 350px at var(--mouse-x) var(--mouse-y),
+                rgba(201, 148, 26, 0.06) 0%,
+                transparent 70%
+            );
         }
 
         /* 粒子背景 - rangonomics风格: 降低存在感 */
@@ -433,62 +486,172 @@
             display: none;
         }
 
-        /* 工作经历样式 */
-        .job-item {
-            margin-bottom: var(--space-6);  /* 32px - 工作经历间距更大 */
+        /* ========================================
+           工作时间轴 - 极简工程风
+           ======================================== */
+        .timeline {
+            position: relative;
+            padding-left: var(--space-7);  /* 48px - 为时间轴留出空间 */
         }
-        .job-item:last-child {
+
+        /* 垂直中线 */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;  /* 中线位置(节点中心) */
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                var(--accent) 5%,
+                var(--accent) 95%,
+                transparent 100%
+            );
+            opacity: 0.3;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: var(--space-7);
+        }
+        .timeline-item:last-child {
             margin-bottom: 0;
         }
-        .job-header {
+
+        /* 时间节点 - 琥珀色圆点 */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: calc(-1 * var(--space-7) + 5px);  /* 中线对齐 */
+            top: 12px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            border: 3px solid var(--accent);
+            transition: all var(--duration-normal) var(--ease-out-quart);
+            z-index: 1;
+        }
+
+        /* 节点hover效果 */
+        .timeline-item:hover::before {
+            transform: scale(1.3);
+            box-shadow: 0 0 0 4px oklch(72% 0.14 75 / 0.15);
+        }
+
+        /* 卡片式内容 */
+        .timeline-card {
+            background: var(--bg-elevated);
+            border-radius: var(--space-3);  /* 12px - 小圆角 */
+            padding: var(--space-5);  /* 24px */
+            border: 1px solid var(--border-subtle);
+            transition: all var(--duration-normal) var(--ease-out-quart);
+        }
+        .timeline-card:hover {
+            border-color: oklch(72% 0.14 75 / 0.3);
+            box-shadow: var(--shadow-sm);
+            transform: translateX(2px);
+        }
+
+        /* 卡片头部 */
+        .timeline-header {
             display: flex;
             justify-content: space-between;
             align-items: baseline;
             flex-wrap: wrap;
             gap: var(--space-2);
-            margin-bottom: var(--space-2);
+            margin-bottom: var(--space-3);
         }
-        .job-title {
+
+        .timeline-role {
             font-family: var(--font-display);
             font-weight: 700;
             font-size: var(--text-lg);
             line-height: var(--leading-snug);
         }
-        .job-company {
+
+        .timeline-company {
             color: var(--accent-glow);
             font-size: var(--text-sm);
             font-weight: 500;
         }
-        .job-date {
+
+        .timeline-date {
             font-size: var(--text-xs);
             background: var(--info-subtle);
             padding: var(--space-1) var(--space-3);
             border-radius: var(--space-5);
             color: var(--info);
             font-weight: 500;
+            white-space: nowrap;
         }
-        .job-desc {
-            margin-top: var(--space-3);
-            padding-left: var(--space-4);
+
+        /* 成果列表 */
+        .timeline-achievements {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
-        .job-desc li {
-            margin-bottom: var(--space-3);
+        .timeline-achievements li {
+            margin-bottom: var(--space-2);
             font-size: var(--text-sm);
             font-weight: 400;
             color: var(--text-secondary);
             position: relative;
-            padding-left: var(--space-4);
+            padding-left: var(--space-5);  /* 24px - 为Emoji留空间 */
             line-height: var(--leading-relaxed);
         }
-        .job-desc li:last-child {
+        .timeline-achievements li:last-child {
             margin-bottom: 0;
         }
-        .job-desc li::before {
-            content: "▹";
+        .timeline-achievements li::before {
+            content: attr(data-emoji);
             position: absolute;
             left: 0;
-            color: var(--accent);
+            top: 0;
+        }
+
+        /* 滚动触发入场动画(stagger延迟) */
+        .timeline-item {
+            opacity: 0;
+            transform: translateX(12px);
+            transition: opacity var(--duration-enter) var(--ease-out-expo),
+                        transform var(--duration-enter) var(--ease-out-expo);
+        }
+        .timeline-item.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 亮色主题适配 */
+        :root.light-theme .timeline::before {
+            opacity: 0.2;
+        }
+        :root.light-theme .timeline-item::before {
+            background: var(--bg-elevated);
+        }
+
+        /* 移动端: 单列,简化时间轴 */
+        @media (max-width: 768px) {
+            .timeline {
+                padding-left: var(--space-5);  /* 24px - 更紧凑 */
+            }
+            .timeline::before {
+                left: 8px;
+                width: 2px;
+            }
+            .timeline-item::before {
+                left: calc(-1 * var(--space-5) + 3px);
+                width: 12px;
+                height: 12px;
+                border-width: 2px;
+                top: 10px;
+            }
+            .timeline-card {
+                padding: var(--space-4);  /* 16px - 更紧凑 */
+            }
         }
 
         /* 项目网格 - rangonomics风格: 简洁工程风 */
@@ -875,6 +1038,11 @@
 <!-- 跳过链接: 键盘用户直接跳转到主内容 -->
 <a href="#main-content" class="skip-link">跳转到主内容</a>
 
+<!-- 鼠标视差背景层 -->
+<div class="parallax-bg"></div>
+<div class="parallax-glow" id="parallaxGlow"></div>
+
+<!-- 粒子背景 -->
 <div id="particles-js"></div>
 
 <div class="portfolio-container">
@@ -883,22 +1051,22 @@
         <div class="avatar">
             <i class="fas fa-user-astronaut"></i>
         </div>
-        <h1>Your Name</h1>
+        <h1>CYY</h1>
         <div class="title">嵌入式软件工程师 / 系统架构师</div>
         <div class="bio">
             构建高可靠、可扩展的智能系统，软硬件协同设计与性能优化。
         </div>
         <div class="contact-info">
             <div class="contact-item"><i class="fas fa-map-marker-alt"></i> 中国 · 武汉</div>
-            <div class="contact-item"><i class="fas fa-envelope"></i> your.email@example.com</div>
-            <div class="contact-item"><i class="fas fa-phone-alt"></i> +86 123 4567 8901</div>
+            <div class="contact-item"><i class="fas fa-envelope"></i> 2716176542@qq.com</div>
+            <div class="contact-item"><i class="fas fa-phone-alt"></i> +86 156 2325 8601</div>
         </div>
         <div class="social-links">
-            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://github.com/CYY24612" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-github"></i>
             <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
         </div>
-        <a href="#" class="btn-soft" role="button"><i class="fas fa-download"></i> 下载简历</a>
         <button class="theme-toggle" id="theme-toggle" aria-label="切换亮暗主题">
             <i class="fas fa-sun" id="theme-icon"></i>
         </button>
@@ -918,31 +1086,57 @@
 
         <div class="section-separator">────────────────────────────────────────</div>
 
-        <!-- 工作经验 -->
+        <!-- 经验与教育 -->
         <section class="content-section" aria-labelledby="experience-heading">
             <div class="section-title" id="experience-heading">
-                <span>WORK EXPERIENCE</span>
+                <span>EXPERIENCE & EDUCATION</span>
             </div>
-            <div class="job-item">
-                <div class="job-header">
-                    <div><span class="job-title">🔧 嵌入式软件工程师</span> · <span class="job-company">某科技公司</span></div>
-                    <div class="job-date">2024 – 至今</div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-card">
+                        <div class="timeline-header">
+                            <div>
+                                <div class="timeline-role">🔧 嵌入式软件工程师</div>
+                                <div class="timeline-company">某科技公司</div>
+                            </div>
+                            <div class="timeline-date">2024 – 至今</div>
+                        </div>
+                        <ul class="timeline-achievements">
+                            <li data-emoji="📈 ">负责核心通信系统的架构设计与性能优化，吞吐量提升10倍</li>
+                            <li data-emoji="👨🏽‍💻 ">主导跨平台C++库开发，实现Windows/Linux双环境自动化测试</li>
+                            <li data-emoji="🎯 ">引入设计模式与CI/CD流程，提高代码复用性与交付质量</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul class="job-desc">
-                    <li>📈 负责核心通信系统的架构设计与性能优化，吞吐量提升10倍</li>
-                    <li>👨🏽‍💻 主导跨平台C++库开发，实现Windows/Linux双环境自动化测试</li>
-                    <li>🎯 引入设计模式与CI/CD流程，提高代码复用性与交付质量</li>
-                </ul>
-            </div>
-            <div class="job-item">
-                <div class="job-header">
-                    <div><span class="job-title">🎛️ 嵌入式开发工程师</span> · <span class="job-company">某电动工具公司</span></div>
-                    <div class="job-date">2023 – 2024</div>
+                <div class="timeline-item">
+                    <div class="timeline-card">
+                        <div class="timeline-header">
+                            <div>
+                                <div class="timeline-role">🎛️ 嵌入式开发工程师</div>
+                                <div class="timeline-company">某电动工具公司</div>
+                            </div>
+                            <div class="timeline-date">2023 – 2024</div>
+                        </div>
+                        <ul class="timeline-achievements">
+                            <li data-emoji="🤖 ">独立完成原理图、PCB Layout及STM32固件开发，推动3款产品量产</li>
+                            <li data-emoji="🥇 ">设计软硬件保护机制，产品故障率降低20%，年出货超2000台</li>
+                        </ul>
+                    </div>
                 </div>
-                <ul class="job-desc">
-                    <li>🤖 独立完成原理图、PCB Layout及STM32固件开发，推动3款产品量产</li>
-                    <li>🥇 设计软硬件保护机制，产品故障率降低20%，年出货超5万台</li>
-                </ul>
+                <div class="timeline-item">
+                    <div class="timeline-card">
+                        <div class="timeline-header">
+                            <div>
+                                <div class="timeline-role">🎓 电子信息工程 本科</div>
+                                <div class="timeline-company">某大学</div>
+                            </div>
+                            <div class="timeline-date">2020 – 2024</div>
+                        </div>
+                        <ul class="timeline-achievements">
+                            <li data-emoji="📚 ">主修：计算机系统、编译原理、数据结构、嵌入式系统设计</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -997,30 +1191,17 @@
                 <span class="skill-tag">Python</span>
                 <span class="skill-tag">Rust</span>
                 <span class="skill-tag">Qt/QML</span>
-                <span class="skill-tag">STM32</span>
-                <span class="skill-tag">FreeRTOS</span>
+                <span class="skill-tag">WinForm/WPF</span>
+                <span class="skill-tag">STM32/ESP32</span>
+                <span class="skill-tag">FreeRTOS/UCOS</span>
                 <span class="skill-tag">PCIE/DMA</span>
                 <span class="skill-tag">UART/SPI/I2C</span>
                 <span class="skill-tag">多线程</span>
                 <span class="skill-tag">设计模式</span>
                 <span class="skill-tag">CMake/Git</span>
-                <span class="skill-tag">Altium Designer</span>
+                <span class="skill-tag">AD/立创EDA</span>
                 <span class="skill-tag">示波器/逻辑分析</span>
             </div>
-        </section>
-
-        <div class="section-separator">────────────────────────────────────────</div>
-
-        <!-- 教育背景 -->
-        <section class="content-section" aria-labelledby="education-heading">
-            <div class="section-title" id="education-heading">
-                <span>EDUCATION</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2);">
-                <span style="font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg);">🎓 电子信息工程 本科</span>
-                <span style="color: var(--accent-glow); font-size: var(--text-sm);">2020 – 2024</span>
-            </div>
-            <div style="margin-top: var(--space-2); color: var(--text-muted); font-size: var(--text-sm);">主修：计算机系统、编译原理、数据结构、嵌入式系统设计</div>
         </section>
 
         <div class="section-separator">────────────────────────────────────────</div>
@@ -1071,34 +1252,57 @@
         // 侧边栏立即显示
         const sidebar = document.querySelector('.sidebar');
         if (sidebar) sidebar.classList.add('is-loaded');
-        
+
         // 检查是否启用减少动画
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        
+
         if (!prefersReducedMotion) {
             // 使用IntersectionObserver触发section入场
             const sections = document.querySelectorAll('.content-section');
-            
-            const observer = new IntersectionObserver((entries) => {
+
+            const sectionObserver = new IntersectionObserver((entries) => {
                 entries.forEach((entry, index) => {
                     if (entry.isIntersecting) {
-                        // 添加stagger延迟
                         setTimeout(() => {
                             entry.target.classList.add('is-visible');
-                        }, index * 100); // 每个section延迟100ms
-                        observer.unobserve(entry.target);
+                        }, index * 100);
+                        sectionObserver.unobserve(entry.target);
                     }
                 });
             }, {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
             });
-            
-            sections.forEach(section => observer.observe(section));
+
+            sections.forEach(section => sectionObserver.observe(section));
+
+            // 观察时间轴项目(stagger延迟)
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const timelineObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        // 为每个时间轴项目添加stagger延迟
+                        const items = Array.from(timelineItems);
+                        const itemIndex = items.indexOf(entry.target);
+                        setTimeout(() => {
+                            entry.target.classList.add('is-visible');
+                        }, itemIndex * 150);  // 150ms间隔
+                        timelineObserver.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: '0px 0px -30px 0px'
+            });
+
+            timelineItems.forEach(item => timelineObserver.observe(item));
         } else {
-            // 减少动画: 直接显示所有section
+            // 减少动画: 直接显示所有
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.add('is-visible');
+            });
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                item.classList.add('is-visible');
             });
         }
     });
@@ -1179,6 +1383,46 @@
 
         // 初始化
         initTheme();
+    })();
+</script>
+
+<script>
+    // ========================================
+    // 鼠标视差背景 - brittanychiang风格
+    // 鼠标跟随聚光灯,使用CSS变量+damping
+    // ========================================
+    (function() {
+        const root = document.documentElement;
+        const EASING = 0.08;  /* 阻尼系数0.08,平滑跟随 */
+
+        let currentX = window.innerWidth / 2;
+        let currentY = window.innerHeight / 2;
+        let targetX = currentX;
+        let targetY = currentY;
+
+        // 检测减少动画偏好
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        document.addEventListener('mousemove', (e) => {
+            targetX = e.clientX;
+            targetY = e.clientY;
+        });
+
+        function animate() {
+            // 线性插值平滑跟随
+            currentX += (targetX - currentX) * EASING;
+            currentY += (targetY - currentY) * EASING;
+
+            root.style.setProperty('--mouse-x', currentX + 'px');
+            root.style.setProperty('--mouse-y', currentY + 'px');
+
+            requestAnimationFrame(animate);
+        }
+
+        // 如果用户偏好减少动画,禁用视差效果
+        if (!prefersReducedMotion) {
+            animate();
+        }
     })();
 </script>
 </body>

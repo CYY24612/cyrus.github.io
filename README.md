@@ -1,6 +1,6 @@
 # 我的个人网站
 
-这是我的个人作品集网站，基于 [这里写你的技术栈，如 HTML/CSS/JS + 粒子背景 + Neumorphism 风格] 构建。网站展示了我的嵌入式软件工程师背景、项目经历和技术博客。
+这是我的个人作品集网站，基于HTML/CSS/JS构建。网站展示了我的嵌入式软件工程师背景、项目经历和技术博客。
 
 🔗 **在线访问**: [https://cyy24612.github.io](https://cyy24612.github.io)
 
@@ -25,10 +25,11 @@
 
 # 个人网站搭建流程
 ## 创建仓库
-登录 GitHub，新建一个以 `github 用户名.github.io` 为名的公开仓库
+登录 GitHub，新建一个以 `cyy24612.github.io` 为名的公开仓库
+，cyy26312替换为自己的GitHub用户名
 
 ## 编写个人网站
-将仓库克隆到本地，增加 index.html 文件，这个文件内为网站的内容
+将新建的仓库克隆到本地，增加 index.html 文件，这个文件内为网站的内容
 
 ## 创建 GitHub Actions WorkFlow
 在项目根目录下新建一个 `.github\workflows\deploy.yml` 文件，增加以下内容
